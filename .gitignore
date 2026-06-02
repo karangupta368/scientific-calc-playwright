@@ -1,0 +1,21 @@
+node_modules/
+dist/
+
+# Environment
+.env
+.env.local
+
+# Corporate CA export (machine-specific; do not commit)
+certs/*.pem
+
+# Playwright
+/test-results/
+/playwright-report/
+/reports/
+/blob-report/
+/playwright/.cache/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
