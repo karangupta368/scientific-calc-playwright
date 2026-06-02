@@ -4,9 +4,10 @@
 |-------|--------|
 | **Application** | [RBI Hub Scientific Calculator](https://rbihubcodechallenge.github.io/calculator/index.html) |
 | **Automation** | Playwright + TypeScript |
-| **Spec file** | [`src/tests/calculator.spec.ts`](src/tests/calculator.spec.ts) |
-| **Page Object** | [`src/pages/CalculatorPage.ts`](src/pages/CalculatorPage.ts) |
-| **PEMDAS matrix** | [`src/tests/pemdas.cases.ts`](src/tests/pemdas.cases.ts) (51 cases) |
+| **Defect register** | [DEFECTS.md](DEFECTS.md) (DEF-01–DEF-22) |
+| **Spec file** | [`../src/tests/calculator.spec.ts`](../src/tests/calculator.spec.ts) |
+| **Page Object** | [`../src/pages/CalculatorPage.ts`](../src/pages/CalculatorPage.ts) |
+| **PEMDAS matrix** | [`../src/tests/pemdas.cases.ts`](../src/tests/pemdas.cases.ts) (51 cases) |
 | **Total automated tests** | 77 |
 | **Strategy** | Assert **correct** calculator behavior; failures act as living defect reports |
 
@@ -16,7 +17,7 @@
 
 - Verify basic arithmetic, operator precedence, decimals, and display behavior through the UI.
 - Verify scientific functions (sin, cos, tan, √, log) and edge cases (division by zero, clear, large numbers).
-- Expose known application defects (DEF-01–DEF-18) via tests that encode the **expected** (correct) behavior.
+- Expose known application defects (DEF-01–DEF-22) via tests that encode the **expected** (correct) behavior.
 - Provide repeatable cross-browser coverage via Playwright (Chromium, Firefox, WebKit).
 
 ---
@@ -31,7 +32,7 @@
 
 ### Out of scope
 
-- Visual/regression testing of CSS layout (DEF-20–DEF-22 documented separately).
+- Visual/regression testing of CSS layout (DEF-20–DEF-22 documented in [DEFECTS.md](DEFECTS.md)).
 - Performance, load, and API testing (client-only app).
 - Fixing defects in the application under test.
 
@@ -53,7 +54,7 @@
 - **Input method:** UI buttons via `CalculatorPage` (`evaluate`, `enterExpression`, `pressNumber`, etc.).
 - **Numeric assertions:** `expectDisplayNumeric` — compares display to expected number with 5 decimal places tolerance.
 - **Text assertions:** `expectDisplayText` or `expect(display).toHaveValue(...)` for exact strings (`Error`, expression preview).
-- **Defect tags:** Comments and this document reference **DEF-XX** IDs from the defect register.
+- **Defect tags:** Comments and [DEFECTS.md](DEFECTS.md) reference **DEF-XX** IDs.
 
 ---
 
@@ -110,7 +111,7 @@
 
 ### 6.3 PEMDAS / BODMAS precedence (51 tests)
 
-All cases are defined in [`src/tests/pemdas.cases.ts`](src/tests/pemdas.cases.ts) and executed from `calculator.spec.ts` under **PEMDAS / BODMAS precedence**. Each test clears the display, enters the expression via UI, presses `=`, and asserts the **mathematically correct** result.
+All cases are defined in [`../src/tests/pemdas.cases.ts`](../src/tests/pemdas.cases.ts) and executed from `calculator.spec.ts` under **PEMDAS / BODMAS precedence**. Each test clears the display, enters the expression via UI, presses `=`, and asserts the **mathematically correct** result.
 
 **Order of operations (no exponents on this calculator):**
 
@@ -198,22 +199,32 @@ See `pemdas.cases.ts` for the full expression and expected value per `PEMDAS-XXX
 
 ## 7. Defect cross-reference
 
+Full reproduction steps and expected vs actual: [DEFECTS.md](DEFECTS.md).
+
 | Defect ID | Description | Test cases |
 |-----------|-------------|------------|
-| DEF-01 | Button `3` appends `0` | TC-012, TC-024 |
-| DEF-02 | Button `−` appends `/` | TC-003, TC-025 |
+| DEF-01 | Button `3` appends `0` | TC-024; PEMDAS-049 – 051 |
+| DEF-02 | Button `−` appends `/` | TC-003, TC-025; PEMDAS with `−` |
 | DEF-03 | `÷` and `−` both append `/` | TC-026 |
-| DEF-04 | Division operands reversed | TC-004, TC-005 |
+| DEF-04 | Division operands reversed | TC-004, TC-005; PEMDAS with `÷` |
 | DEF-05 | Division by zero shows `0` | TC-006 |
 | DEF-06 | Parentheses + trailing operator broken | PEMDAS-028 – 048, PEMDAS-050 |
+| DEF-07 | Parser skips token after `)` | PEMDAS-028 – 048 (via DEF-06) |
 | DEF-08 | Missing `)` shows `NaN` | TC-027 |
 | DEF-09 | Stray `)` not rejected | TC-028 |
 | DEF-10 | Empty `=` shows `undefined` | TC-010 |
+| DEF-11 | Invalid syntax inconsistent | Not automated |
 | DEF-12 | `sin` hardcoded to `1` | TC-020 |
 | DEF-13 | sin/cos/tan on empty → `Error` | TC-015, TC-016, TC-017 |
 | DEF-14 | √ on empty → `Error` | TC-018 |
 | DEF-15 | Scientific ops use `parseFloat` prefix only | TC-029 |
+| DEF-16 | Radians not documented | Not automated |
+| DEF-17 | √ edge cases inconsistent | TC-019, TC-018 |
 | DEF-18 | `log(0)` → `-Infinity` not `Error` | TC-023 |
+| DEF-19 | Stuck on `Error` after scientific | Not automated |
+| DEF-20 | Grid layout uneven | Manual / visual only |
+| DEF-21 | Display disabled | Manual / a11y only |
+| DEF-22 | No `data-testid` in DOM | N/A (POM uses roles) |
 
 ---
 
@@ -246,7 +257,7 @@ npm run test:headed
 npm run report
 ```
 
-See [README.md](README.md) for environment variables (`BASE_URL`, `PROJECTS`, `HEADLESS`, corporate CA setup).
+See [README.md](../README.md) for environment variables (`BASE_URL`, `PROJECTS`, `HEADLESS`, corporate CA setup).
 
 ---
 
@@ -254,8 +265,9 @@ See [README.md](README.md) for environment variables (`BASE_URL`, `PROJECTS`, `H
 
 | Artifact | Location |
 |----------|----------|
-| Automated tests | [`src/tests/calculator.spec.ts`](src/tests/calculator.spec.ts) |
-| PEMDAS case matrix | [`src/tests/pemdas.cases.ts`](src/tests/pemdas.cases.ts) |
-| Assertions helpers | [`src/utils/assertions.ts`](src/utils/assertions.ts) |
-| Page Object | [`src/pages/CalculatorPage.ts`](src/pages/CalculatorPage.ts) |
-| Playwright config | [`playwright.config.ts`](playwright.config.ts) |
+| Defect register | [DEFECTS.md](DEFECTS.md) |
+| Automated tests | [`../src/tests/calculator.spec.ts`](../src/tests/calculator.spec.ts) |
+| PEMDAS case matrix | [`../src/tests/pemdas.cases.ts`](../src/tests/pemdas.cases.ts) |
+| Assertions helpers | [`../src/utils/assertions.ts`](../src/utils/assertions.ts) |
+| Page Object | [`../src/pages/CalculatorPage.ts`](../src/pages/CalculatorPage.ts) |
+| Playwright config | [`../playwright.config.ts`](../playwright.config.ts) |

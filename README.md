@@ -80,16 +80,25 @@ Reports are written to `reports/html`. Failure artifacts (screenshots, videos) g
 ## Project structure
 
 ```
+docs/
+  DEFECTS.md           # Application defect register DEF-01–DEF-22
+  TEST_PLAN.md         # Test cases and traceability
 src/
-  config/env.ts      # dotenv-backed configuration
-  pages/CalculatorPage.ts  # Page Object Model
-  tests/calculator.spec.ts # E2E tests (assert correct math; failures = defects)
-  utils/assertions.ts    # Display assertion helpers
-git 
+  config/env.ts
+  pages/CalculatorPage.ts
+  tests/calculator.spec.ts
+  tests/pemdas.cases.ts
+  utils/assertions.ts
+playwright.config.ts
 ```
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [docs/TEST_PLAN.md](docs/TEST_PLAN.md) | 77 automated test cases, PEMDAS matrix, execution |
+| [docs/DEFECTS.md](docs/DEFECTS.md) | Application defect register: repro steps, expected vs actual (DEF-01–DEF-22) |
 
 ## Test strategy
 
-Tests assert **correct** calculator behavior and serve as living defect reports against known app bugs (DEF-01–DEF-22). Failures are expected until the application is fixed.
-
-Full test case documentation: [TEST_PLAN.md](TEST_PLAN.md) (77 automated cases, including 51 PEMDAS/BODMAS combinations).
+Tests assert **correct** calculator behavior and serve as living defect reports against known application bugs. Failures are expected until the [application under test](https://rbihubcodechallenge.github.io/calculator/index.html) is fixed. See [docs/DEFECTS.md](docs/DEFECTS.md) for the full defect register.
