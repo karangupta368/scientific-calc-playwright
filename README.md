@@ -83,11 +83,13 @@ Reports are written to `reports/html`. Failure artifacts (screenshots, videos) g
 src/
   config/env.ts      # dotenv-backed configuration
   pages/CalculatorPage.ts  # Page Object Model
-  tests/             # Spec files (upcoming)
-  utils/             # Shared helpers (upcoming)
-playwright.config.ts
+  tests/calculator.spec.ts # E2E tests (assert correct math; failures = defects)
+  utils/assertions.ts    # Display assertion helpers
+git 
 ```
 
 ## Test strategy
 
 Tests assert **correct** calculator behavior and serve as living defect reports against known app bugs (DEF-01–DEF-22). Failures are expected until the application is fixed.
+
+Full test case documentation: [TEST_PLAN.md](TEST_PLAN.md) (77 automated cases, including 51 PEMDAS/BODMAS combinations).
