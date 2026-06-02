@@ -82,7 +82,7 @@ Reports are written to `reports/html`. Failure artifacts (screenshots, videos) g
 ```
 src/
   config/env.ts      # dotenv-backed configuration
-  pages/             # Page Object Model (upcoming)
+  pages/CalculatorPage.ts  # Page Object Model
   tests/             # Spec files (upcoming)
   utils/             # Shared helpers (upcoming)
 playwright.config.ts
