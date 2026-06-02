@@ -1,0 +1,26 @@
+{
+  "name": "scientific-calc-playwright",
+  "version": "1.0.0",
+  "description": "Playwright automation framework for the RBI Hub scientific calculator",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:chromium": "playwright test --project=chromium",
+    "report": "playwright show-report reports/html",
+    "setup:ca": "bash scripts/setup-corporate-ca.sh",
+    "install:browsers": "playwright install",
+    "install:browsers:core": "playwright install chromium firefox"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.0",
+    "dotenv": "^16.5.0",
+    "typescript": "^5.8.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
