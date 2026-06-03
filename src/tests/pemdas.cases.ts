@@ -16,6 +16,8 @@ export interface PemdasCase {
   category: PemdasCategory;
   /** Known defect ids that may cause failure on the current app build. */
   defects?: string[];
+/** Include in @sanity smoke subset (also @regression). Set on passing smoke or critical defect monitors. */
+  sanity?: boolean;
 }
 
 export type PemdasCategory =
@@ -34,6 +36,7 @@ const HIGHER_PRECEDENCE_SECOND: PemdasCase[] = [
     expression: '2+4*4',
     expected: 18,
     category: 'higher_precedence_second',
+    sanity: true,
   },
   {
     id: 'PEMDAS-002',
@@ -41,6 +44,7 @@ const HIGHER_PRECEDENCE_SECOND: PemdasCase[] = [
     expression: '5+2*2',
     expected: 9,
     category: 'higher_precedence_second',
+    sanity: true,
   },
   {
     id: 'PEMDAS-003',
@@ -100,6 +104,7 @@ const HIGHER_PRECEDENCE_FIRST: PemdasCase[] = [
     expression: '6*2+1',
     expected: 13,
     category: 'higher_precedence_first',
+    sanity: true,
   },
   {
     id: 'PEMDAS-010',
@@ -107,6 +112,7 @@ const HIGHER_PRECEDENCE_FIRST: PemdasCase[] = [
     expression: '4*2+5',
     expected: 13,
     category: 'higher_precedence_first',
+    sanity: true,
   },
   {
     id: 'PEMDAS-011',
@@ -214,6 +220,7 @@ const EQUAL_PRECEDENCE: PemdasCase[] = [
     expression: '2*4*2',
     expected: 16,
     category: 'equal_precedence',
+    sanity: true,
   },
   {
     id: 'PEMDAS-024',
@@ -221,6 +228,7 @@ const EQUAL_PRECEDENCE: PemdasCase[] = [
     expression: '8+2+4',
     expected: 14,
     category: 'equal_precedence',
+    sanity: true,
   },
   {
     id: 'PEMDAS-025',
@@ -257,6 +265,7 @@ const PARENTHESES: PemdasCase[] = [
     expected: 16,
     category: 'parentheses',
     defects: ['DEF-06'],
+    sanity: true,
   },
   {
     id: 'PEMDAS-029',

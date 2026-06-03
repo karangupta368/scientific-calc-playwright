@@ -55,26 +55,81 @@
 - **Numeric assertions:** `expectDisplayNumeric` — compares display to expected number with 5 decimal places tolerance.
 - **Text assertions:** `expectDisplayText` or `expect(display).toHaveValue(...)` for exact strings (`Error`, expression preview).
 - **Defect tags:** Comments and [DEFECTS.md](DEFECTS.md) reference **DEF-XX** IDs.
+- **Run tags:** Playwright `@sanity` (14 tests) and `@regression` (77 tests); see section 5.
 
 ---
 
-## 5. Suite summary
+## 5. Test tags (Sanity / Regression)
 
-| Suite | Tests | Primary focus |
-|-------|------:|---------------|
-| Basic operations | 5 | +, −, ×, ÷ |
-| Edge cases | 6 | Div by zero, decimals, clear, empty `=`, large values |
-| PEMDAS / BODMAS precedence | 51 | Full operator-precedence matrix |
-| Scientific functions | 10 | sin, cos, tan, √, log |
-| UI button mapping | 3 | Miswired keys |
-| Expression parsing defects | 3 | Invalid / partial expressions |
-| **Total** | **77** | |
+| Tag | Count | When to run | Purpose |
+|-----|------:|-------------|---------|
+| `@sanity` | 20 | PR, post-deploy, quick local check | Smoke + **critical defect monitors** (see below) |
+| `@regression` | 77 | Nightly, pre-release, full CI | Full suite including defects, PEMDAS matrix, edge cases |
+
+**Rules:** Every test has `@regression`. Sanity tests also have `@sanity` (sanity ⊆ regression). Sanity includes both **passing smoke** paths and **critical defect monitors** (DEF-01, DEF-02, DEF-04, DEF-05, DEF-06) that are expected to **fail** until the application is fixed.
+
+```bash
+npm run test:sanity              # 20 tests (all browsers)
+npm run test:sanity:chromium     # 20 tests, Chromium only
+npm run test:regression          # 77 tests
+npm test                         # full suite
+```
+
+**CI recommendation:** PR pipeline → `npm run test:sanity:chromium` (expect failures on current app build); nightly → `npm test`.
+
+### Sanity suite (20 tests)
+
+**Smoke — expected to pass on current app**
+
+| ID | Test |
+|----|------|
+| TC-001 | addition: 2 + 2 = 4 |
+| TC-002 | multiplication: 6 × 7 = 42 |
+| TC-007 | decimal addition: 1.2 + 2.4 = 3.6 |
+| TC-008 | clearing display resets mid-calculation |
+| TC-009 | clear then new calculation: 2 + 2 = 4 |
+| PEMDAS-001 | 2 + 4 × 4 = 18 |
+| PEMDAS-002 | 5 + 2 × 2 = 9 |
+| PEMDAS-009 | 6 × 2 + 1 = 13 |
+| PEMDAS-010 | 4 × 2 + 5 = 13 |
+| PEMDAS-023 | 2 × 4 × 2 = 16 |
+| PEMDAS-024 | 8 + 2 + 4 = 14 |
+| TC-019 | square root: √9 = 3 |
+| TC-021 | cos(0) = 1 |
+| TC-022 | tan(0) = 0 |
+
+**Critical defect monitors — expected to fail until app is fixed**
+
+| ID | Test | Defect |
+|----|------|--------|
+| TC-024 | pressing 3 shows 3 in the display | DEF-01 |
+| TC-025 | pressing minus after 5 shows 5- in the display | DEF-02 |
+| TC-003 | subtraction: 10 − 3 = 7 | DEF-02 |
+| TC-004 | division: 8 ÷ 2 = 4 | DEF-04 |
+| TC-006 | division by zero: 8 ÷ 0 shows Error or Infinity | DEF-05 |
+| PEMDAS-028 | (2 + 2) × 4 = 16 | DEF-06 |
+
+Tag constants: [`../src/tests/tags.ts`](../src/tests/tags.ts).
 
 ---
 
-## 6. Test cases
+## 6. Suite summary
 
-### 6.1 Basic operations
+| Suite | Tests | @sanity | Primary focus |
+|-------|------:|--------:|---------------|
+| Basic operations | 5 | 4 | +, −, ×, ÷ |
+| Edge cases | 6 | 4 | Div by zero, decimals, clear, empty `=`, large values |
+| PEMDAS / BODMAS precedence | 51 | 7 | Full operator-precedence matrix |
+| Scientific functions | 10 | 3 | sin, cos, tan, √, log |
+| UI button mapping | 3 | 2 | Miswired keys |
+| Expression parsing defects | 3 | 0 | Invalid / partial expressions |
+| **Total** | **77** | **20** | |
+
+---
+
+## 7. Test cases
+
+### 7.1 Basic operations
 
 | TC-ID | Test name (spec) | Steps | Expected result | Defect | Pass criteria |
 |-------|------------------|-------|-----------------|--------|---------------|
@@ -91,7 +146,7 @@
 
 ---
 
-### 6.2 Edge cases
+### 7.2 Edge cases
 
 | TC-ID | Test name (spec) | Steps | Expected result | Defect | Pass criteria |
 |-------|------------------|-------|-----------------|--------|---------------|
@@ -109,7 +164,7 @@
 
 ---
 
-### 6.3 PEMDAS / BODMAS precedence (51 tests)
+### 7.3 PEMDAS / BODMAS precedence (51 tests)
 
 All cases are defined in [`../src/tests/pemdas.cases.ts`](../src/tests/pemdas.cases.ts) and executed from `calculator.spec.ts` under **PEMDAS / BODMAS precedence**. Each test clears the display, enters the expression via UI, presses `=`, and asserts the **mathematically correct** result.
 
@@ -143,7 +198,7 @@ See `pemdas.cases.ts` for the full expression and expected value per `PEMDAS-XXX
 
 ---
 
-### 6.4 Scientific functions
+### 7.4 Scientific functions
 
 | TC-ID | Test name (spec) | Steps | Expected result | Defect | Pass criteria |
 |-------|------------------|-------|-----------------|--------|---------------|
@@ -165,7 +220,7 @@ See `pemdas.cases.ts` for the full expression and expected value per `PEMDAS-XXX
 
 ---
 
-### 6.5 UI button mapping
+### 7.5 UI button mapping
 
 | TC-ID | Test name (spec) | Steps | Expected result | Defect | Pass criteria |
 |-------|------------------|-------|-----------------|--------|---------------|
@@ -181,7 +236,7 @@ See `pemdas.cases.ts` for the full expression and expected value per `PEMDAS-XXX
 
 ---
 
-### 6.6 Expression parsing defects
+### 7.6 Expression parsing defects
 
 | TC-ID | Test name (spec) | Steps | Expected result | Defect | Pass criteria |
 |-------|------------------|-------|-----------------|--------|---------------|
@@ -197,7 +252,7 @@ See `pemdas.cases.ts` for the full expression and expected value per `PEMDAS-XXX
 
 ---
 
-## 7. Defect cross-reference
+## 8. Defect cross-reference
 
 Full reproduction steps and expected vs actual: [DEFECTS.md](DEFECTS.md).
 
@@ -228,7 +283,7 @@ Full reproduction steps and expected vs actual: [DEFECTS.md](DEFECTS.md).
 
 ---
 
-## 8. Expected baseline (Chromium, current app)
+## 9. Expected baseline (Chromium, current app)
 
 As of the initial automation run against the hosted calculator:
 
@@ -241,7 +296,7 @@ Re-run after app fixes; update this section when the baseline changes.
 
 ---
 
-## 9. Execution
+## 10. Execution
 
 ```bash
 # All configured projects
@@ -261,11 +316,12 @@ See [README.md](../README.md) for environment variables (`BASE_URL`, `PROJECTS`,
 
 ---
 
-## 10. Traceability
+## 11. Traceability
 
 | Artifact | Location |
 |----------|----------|
 | Defect register | [DEFECTS.md](DEFECTS.md) |
+| Test tags | [`../src/tests/tags.ts`](../src/tests/tags.ts) |
 | Automated tests | [`../src/tests/calculator.spec.ts`](../src/tests/calculator.spec.ts) |
 | PEMDAS case matrix | [`../src/tests/pemdas.cases.ts`](../src/tests/pemdas.cases.ts) |
 | Assertions helpers | [`../src/utils/assertions.ts`](../src/utils/assertions.ts) |
