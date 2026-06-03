@@ -12,7 +12,7 @@
     "test:sanity": "playwright test --grep @sanity",
     "test:sanity:chromium": "playwright test --grep @sanity --project=chromium",
     "test:regression": "playwright test --grep @regression",
-    "report": "playwright show-report reports/html",
+    "report": "playwright show-report playwright-report",
     "setup:ca": "bash scripts/setup-corporate-ca.sh",
     "install:browsers": "playwright install",
     "install:browsers:core": "playwright install chromium firefox"
