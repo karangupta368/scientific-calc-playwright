@@ -9,12 +9,13 @@
     "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug",
     "test:chromium": "playwright test --project=chromium",
+    "test:ci": "playwright test --project=chromium",
     "test:sanity": "playwright test --grep @sanity",
     "test:sanity:chromium": "playwright test --grep @sanity --project=chromium",
     "test:regression": "playwright test --grep @regression",
     "report": "playwright show-report playwright-report",
-    "setup:ca": "bash scripts/setup-corporate-ca.sh",
     "install:browsers": "playwright install",
+    "install:browsers:ci": "playwright install --with-deps chromium",
     "install:browsers:core": "playwright install chromium firefox"
   },
   "devDependencies": {

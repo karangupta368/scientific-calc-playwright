@@ -5,9 +5,6 @@ dist/
 .env
 .env.local
 
-# Corporate CA export (machine-specific; do not commit)
-certs/*.pem
-
 # Playwright
 /test-results/
 /playwright-report/

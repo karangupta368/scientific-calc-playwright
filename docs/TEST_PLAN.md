@@ -18,7 +18,7 @@
 - Verify basic arithmetic, operator precedence, decimals, and display behavior through the UI.
 - Verify scientific functions (sin, cos, tan, √, log) and edge cases (division by zero, clear, large numbers).
 - Expose known application defects (DEF-01–DEF-22) via tests that encode the **expected** (correct) behavior.
-- Provide repeatable cross-browser coverage via Playwright (Chromium, Firefox, WebKit).
+- Provide repeatable coverage via Playwright; **CI runs Chromium**; Firefox and WebKit available locally via `PROJECTS`.
 
 ---
 
@@ -44,8 +44,8 @@
 |------|--------|
 | **Base URL** | `BASE_URL` env (default: `https://rbihubcodechallenge.github.io/calculator/`) |
 | **Entry page** | `index.html` |
-| **Browsers** | Chromium, Firefox, WebKit (`PROJECTS` env) |
-| **Precondition** | Fresh page load; `CalculatorPage.goto()` in `beforeEach` |
+| **Browsers** | **CI:** Chromium · **Local:** Chromium, Firefox, WebKit (`PROJECTS` env) |
+| **Precondition** | Fresh page load via `calculator` fixture (`CalculatorPage.goto()`) |
 
 ---
 
@@ -69,13 +69,15 @@
 **Rules:** Every test has `@regression`. Sanity tests also have `@sanity` (sanity ⊆ regression). Sanity includes both **passing smoke** paths and **critical defect monitors** (DEF-01, DEF-02, DEF-04, DEF-05, DEF-06) that are expected to **fail** until the application is fixed.
 
 ```bash
-npm run test:sanity              # 20 tests (all browsers)
-npm run test:sanity:chromium     # 20 tests, Chromium only
-npm run test:regression          # 77 tests
-npm test                         # full suite
+npm run test:ci                # 77 tests, Chromium only (matches GitHub Actions)
+npm run test:sanity:chromium   # 20 tests, Chromium only
+npm run test:regression        # 77 tests, all configured browsers
+npm test                       # full suite (default PROJECTS: chromium, firefox, webkit)
 ```
 
-**CI recommendation:** PR pipeline → `npm run test:sanity:chromium` (expect failures on current app build); nightly → `npm test`.
+**CI (GitHub Actions):** Full regression on **Chromium only** — `npx playwright test --project=chromium` with `PROJECTS=chromium`.
+
+**Local cross-browser:** Set `PROJECTS=chromium,firefox,webkit` (default) or run `npm test` after `npx playwright install`.
 
 ### Sanity suite (20 tests)
 
@@ -299,10 +301,13 @@ Re-run after app fixes; update this section when the baseline changes.
 ## 10. Execution
 
 ```bash
-# All configured projects
+# CI parity (Chromium only)
+npm run test:ci
+
+# All configured projects (local default: chromium, firefox, webkit)
 npm test
 
-# Chromium only (faster local run)
+# Chromium only
 npm run test:chromium
 
 # Headed mode
@@ -312,7 +317,7 @@ npm run test:headed
 npm run report
 ```
 
-See [README.md](../README.md) for environment variables (`BASE_URL`, `PROJECTS`, `HEADLESS`, corporate CA setup).
+See [README.md](../README.md) for environment variables (`BASE_URL`, `PROJECTS`, `HEADLESS`).
 
 ---
 

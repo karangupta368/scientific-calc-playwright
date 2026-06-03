@@ -16,7 +16,7 @@ export interface PemdasCase {
   category: PemdasCategory;
   /** Known defect ids that may cause failure on the current app build. */
   defects?: string[];
-/** Include in @sanity smoke subset (also @regression). Set on passing smoke or critical defect monitors. */
+  /** Include in @sanity smoke subset (also @regression). */
   sanity?: boolean;
 }
 
@@ -305,7 +305,6 @@ const PARENTHESES: PemdasCase[] = [
     expression: '2*(4+2)',
     expected: 12,
     category: 'parentheses',
-    defects: ['DEF-06'],
   },
   {
     id: 'PEMDAS-034',
@@ -313,7 +312,6 @@ const PARENTHESES: PemdasCase[] = [
     expression: '4*(2+6)',
     expected: 32,
     category: 'parentheses',
-    defects: ['DEF-06'],
   },
   {
     id: 'PEMDAS-035',
@@ -321,7 +319,7 @@ const PARENTHESES: PemdasCase[] = [
     expression: '2*(6-2)',
     expected: 8,
     category: 'parentheses',
-    defects: ['DEF-02', 'DEF-06'],
+    defects: ['DEF-02'],
   },
   {
     id: 'PEMDAS-036',
@@ -329,7 +327,7 @@ const PARENTHESES: PemdasCase[] = [
     expression: '8/(2+2)',
     expected: 2,
     category: 'parentheses',
-    defects: ['DEF-04', 'DEF-06'],
+    defects: ['DEF-04'],
   },
   {
     id: 'PEMDAS-037',
@@ -337,7 +335,7 @@ const PARENTHESES: PemdasCase[] = [
     expression: '8/(6-2)',
     expected: 2,
     category: 'parentheses',
-    defects: ['DEF-02', 'DEF-04', 'DEF-06'],
+    defects: ['DEF-02', 'DEF-04'],
   },
   {
     id: 'PEMDAS-038',
@@ -345,7 +343,6 @@ const PARENTHESES: PemdasCase[] = [
     expression: '2+(4*2)',
     expected: 10,
     category: 'parentheses',
-    defects: ['DEF-06'],
   },
   {
     id: 'PEMDAS-039',
@@ -353,7 +350,6 @@ const PARENTHESES: PemdasCase[] = [
     expression: '5+(2*4)',
     expected: 13,
     category: 'parentheses',
-    defects: ['DEF-06'],
   },
   {
     id: 'PEMDAS-040',
@@ -361,7 +357,7 @@ const PARENTHESES: PemdasCase[] = [
     expression: '2+(8/4)',
     expected: 4,
     category: 'parentheses',
-    defects: ['DEF-04', 'DEF-06'],
+    defects: ['DEF-04'],
   },
   {
     id: 'PEMDAS-041',
@@ -369,7 +365,7 @@ const PARENTHESES: PemdasCase[] = [
     expression: '10-(2*4)',
     expected: 2,
     category: 'parentheses',
-    defects: ['DEF-02', 'DEF-06'],
+    defects: ['DEF-02'],
   },
   {
     id: 'PEMDAS-042',
@@ -377,7 +373,7 @@ const PARENTHESES: PemdasCase[] = [
     expression: '10-(8/4)',
     expected: 8,
     category: 'parentheses',
-    defects: ['DEF-02', 'DEF-04', 'DEF-06'],
+    defects: ['DEF-02', 'DEF-04'],
   },
   {
     id: 'PEMDAS-043',
@@ -412,7 +408,6 @@ const NESTED_PARENTHESES: PemdasCase[] = [
     expression: '((2+2))*4',
     expected: 16,
     category: 'nested_parentheses',
-    defects: ['DEF-06'],
   },
   {
     id: 'PEMDAS-047',
@@ -420,7 +415,6 @@ const NESTED_PARENTHESES: PemdasCase[] = [
     expression: '(2+(4+2))',
     expected: 8,
     category: 'nested_parentheses',
-    defects: ['DEF-06'],
   },
   {
     id: 'PEMDAS-048',
@@ -428,7 +422,6 @@ const NESTED_PARENTHESES: PemdasCase[] = [
     expression: '((6+2)/2)*2',
     expected: 8,
     category: 'nested_parentheses',
-    defects: ['DEF-04', 'DEF-06'],
   },
 ];
 
