@@ -15,7 +15,7 @@ export default defineConfig({
   testDir: './src/tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: 0,
+  retries: process.env.CI ? 1 : 0,
   workers,
   timeout: timeoutMs,
   expect: {
@@ -30,7 +30,7 @@ export default defineConfig({
   use: {
     baseURL: baseUrl,
     headless,
-    trace: 'on-first-retry',
+    trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     actionTimeout: 10_000,

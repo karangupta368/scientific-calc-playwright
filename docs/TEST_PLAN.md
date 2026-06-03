@@ -111,7 +111,7 @@ npm test                       # full suite (default PROJECTS: chromium, firefox
 | TC-006 | division by zero: 8 ÷ 0 shows Error or Infinity | DEF-05 |
 | PEMDAS-028 | (2 + 2) × 4 = 16 | DEF-06 |
 
-Tag constants: [`../src/tests/tags.ts`](../src/tests/tags.ts).
+Tag constants: [`../src/config/tags.ts`](../src/config/tags.ts).
 
 ---
 
@@ -326,7 +326,7 @@ See [README.md](../README.md) for environment variables (`BASE_URL`, `PROJECTS`,
 | Artifact | Location |
 |----------|----------|
 | Defect register | [DEFECTS.md](DEFECTS.md) |
-| Test tags | [`../src/tests/tags.ts`](../src/tests/tags.ts) |
+| Test tags | [`../src/config/tags.ts`](../src/config/tags.ts) |
 | Automated tests | [`../src/tests/calculator.spec.ts`](../src/tests/calculator.spec.ts) |
 | PEMDAS case matrix | [`../src/tests/pemdas.cases.ts`](../src/tests/pemdas.cases.ts) |
 | Assertions helpers | [`../src/utils/assertions.ts`](../src/utils/assertions.ts) |
