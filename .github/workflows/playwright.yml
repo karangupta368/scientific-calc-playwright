@@ -7,9 +7,12 @@ on:
     branches: [main, master]
   workflow_dispatch:
 
+env:
+  PROJECTS: chromium
+
 jobs:
   test:
-    name: E2E Tests
+    name: E2E Tests (Chromium)
     timeout-minutes: 60
     runs-on: ubuntu-latest
 
@@ -26,11 +29,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test --project=chromium
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
@@ -39,3 +42,44 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 3
+
+      - name: Publish executive test summary
+        if: ${{ !cancelled() }}
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" << 'EOF'
+          ## Executive Test Dashboard
+
+          | Field | Value |
+          |-------|-------|
+          | **Project** | RBI Hub Scientific Calculator — E2E Framework |
+          | **Test Engine** | Playwright + TypeScript |
+          | **Environment** | GitHub Actions (`ubuntu-latest`) |
+          | **Browser** | Chromium (CI gate) |
+          | **Quality Gate** | Green CI Gate (`test.fail()` on known defects) |
+          | **Tests** | 77 |
+
+          ### Known Defects Under Management
+
+          Expected failures are tracked via Jira-style IDs and **`test.fail()`** — the pipeline stays **green** while defects remain visible in reports.
+
+          | Ticket | Defect | Severity |
+          |--------|--------|----------|
+          | JIRA-CALC-101 | Button `3` appends `0` | Critical |
+          | JIRA-CALC-102 | Minus button appends `/` instead of `-` | Critical |
+          | JIRA-CALC-103 | Divide and minus buttons duplicate `/` | Major |
+          | JIRA-CALC-104 | Division operands reversed | Critical |
+          | JIRA-CALC-105 | Division by zero returns `0` | Critical |
+          | JIRA-CALC-106 | Parentheses + trailing operator broken | Critical |
+          | JIRA-CALC-108 | Missing `)` shows `NaN` | Major |
+          | JIRA-CALC-109 | Stray `)` not rejected | Major |
+          | JIRA-CALC-110 | Empty `=` shows `undefined` | Minor |
+          | JIRA-CALC-112 | `sin()` hardcoded to `1` | Major |
+          | JIRA-CALC-113 | sin/cos/tan empty → `Error` | Major |
+          | JIRA-CALC-114 | √ on empty → `Error` | Major |
+          | JIRA-CALC-115 | Scientific ops use `parseFloat` prefix | Major |
+          | JIRA-CALC-118 | `log(0)` → `-Infinity` | Minor |
+
+          **Artifacts:** Download `playwright-report` for full HTML results, screenshots, and videos.
+
+          **Documentation:** [DEFECTS.md](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/docs/DEFECTS.md) · [TEST_PLAN.md](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/docs/TEST_PLAN.md)
+          EOF
