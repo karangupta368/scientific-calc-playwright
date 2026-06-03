@@ -8,7 +8,9 @@ on:
   workflow_dispatch:
 
 env:
+  CI: true
   PROJECTS: chromium
+  WORKERS: 2
 
 jobs:
   test:
@@ -29,11 +31,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Typecheck
+        run: npm run typecheck
+
       - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+        run: npm run install:browsers:ci
 
       - name: Run Playwright tests
-        run: npx playwright test --project=chromium
+        run: npm run test:ci
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
@@ -55,6 +60,7 @@ jobs:
           | **Test Engine** | Playwright + TypeScript |
           | **Environment** | GitHub Actions (`ubuntu-latest`) |
           | **Browser** | Chromium (CI gate) |
+          | **Workers** | 2 |
           | **Quality Gate** | Green CI Gate (`test.fail()` on known defects) |
           | **Tests** | 77 |
 

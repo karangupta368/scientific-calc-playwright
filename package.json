@@ -4,6 +4,7 @@
   "description": "Playwright automation framework for the RBI Hub scientific calculator",
   "private": true,
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",

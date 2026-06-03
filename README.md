@@ -20,7 +20,7 @@ Production-ready end-to-end automation framework built with **Playwright** and *
 | **HTML reporting** | Rich Playwright HTML report with traces, screenshots, and videos on failure |
 | **CI/CD pipeline** | GitHub Actions with **Green CI Gate** (`test.fail()`), executive step summary, and artifact upload |
 | **Defect register** | Living documentation of 22 application bugs with repro steps ([docs/DEFECTS.md](docs/DEFECTS.md)) |
-| **Test governance** | Jira-style expected-failure annotations in `known-defects.ts` — pipeline stays green, defects stay visible |
+| **Test governance** | Jira-style expected-failure annotations in [`known-defects.ts`](src/config/known-defects.ts) — pipeline stays green, defects stay visible |
 
 ---
 
@@ -89,6 +89,7 @@ npm run test:ui
 
 | Command | Description |
 |---------|-------------|
+| `npm run typecheck` | TypeScript compile check (`tsc --noEmit`) |
 | `npm run test:ci` | **CI parity** — full suite on Chromium only |
 | `npm run test:chromium` | Chromium only |
 | `npm run test:sanity` | Sanity suite — 20 tests (`@sanity`), all configured browsers |
@@ -108,7 +109,7 @@ A Lead SDET treats CI as a **quality gate**, not a raw defect dump. When every r
 This framework implements a **Green CI Gate**:
 
 1. **Tests still assert correct behavior** — specifications do not change to match broken app logic.
-2. **Known failures are annotated** with Playwright `test.fail(true, 'JIRA-CALC-XXX: …')` via `markExpectedApplicationDefect()` in [`src/tests/known-defects.ts`](src/tests/known-defects.ts).
+2. **Known failures are annotated** with Playwright `test.fail(true, 'JIRA-CALC-XXX: …')` via `markExpectedApplicationDefect()` in [`src/config/known-defects.ts`](src/config/known-defects.ts).
 3. **CI stays green** when the app fails as documented; **CI turns red** when a known defect is fixed (unexpected pass) or a **new** regression appears.
 4. **Defects remain visible** in HTML reports, annotations, and the GitHub Actions **Executive Test Dashboard** (`$GITHUB_STEP_SUMMARY`).
 
@@ -117,7 +118,7 @@ This mirrors production SDET practice: separate **signal** (new breakage) from *
 ### How `test.fail()` works here
 
 ```typescript
-import { markExpectedApplicationDefect } from './known-defects';
+import { markExpectedApplicationDefect } from '../config/known-defects';
 
 test('division by zero shows Error or Infinity', async () => {
   markExpectedApplicationDefect('DEF-05'); // JIRA-CALC-105: …
@@ -172,10 +173,11 @@ The workflow [`.github/workflows/playwright.yml`](.github/workflows/playwright.y
 1. Checkout code on `ubuntu-latest`
 2. Set up Node.js LTS with npm cache
 3. Install dependencies (`npm ci`)
-4. Install **Chromium** with system deps (`npx playwright install --with-deps chromium`)
-5. Execute the full suite on Chromium (`npx playwright test --project=chromium`)
-6. Upload the HTML report as a build artifact (retained **3 days**)
-7. Publish an **Executive Test Dashboard** to the workflow run summary (`$GITHUB_STEP_SUMMARY`)
+4. Typecheck (`npm run typecheck`)
+5. Install **Chromium** with system deps (`npm run install:browsers:ci`)
+6. Execute the full suite on Chromium (`npm run test:ci`, 2 workers, 1 retry on infra flakes)
+7. Upload the HTML report as a build artifact (retained **3 days**)
+8. Publish an **Executive Test Dashboard** to the workflow run summary (`$GITHUB_STEP_SUMMARY`)
 
 ### Download the HTML test report
 
@@ -197,13 +199,15 @@ docs/
   DEFECTS.md                         # Defect register (DEF-01–DEF-22)
   TEST_PLAN.md                       # Test cases & traceability
 src/
-  config/env.ts                      # Environment & browser project config
+  config/
+    env.ts                           # Environment & browser project config
+    known-defects.ts                 # Jira-style DEF-* → test.fail() registry
+    tags.ts                          # @sanity / @regression tag constants
+  fixtures/calculator.fixture.ts     # Playwright fixture (isolated page per test)
   pages/CalculatorPage.ts            # Page Object Model
   tests/
     calculator.spec.ts               # E2E specs (Green CI Gate annotations)
-    known-defects.ts                 # Jira-style DEF-* → test.fail() registry
     pemdas.cases.ts                  # PEMDAS test matrix (51 cases)
-    tags.ts                          # @sanity / @regression constants
   utils/assertions.ts                # Display assertion helpers
 playwright.config.ts
 ```
@@ -219,7 +223,7 @@ Environment variables (see [.env.example](.env.example)):
 | `BASE_URL` | RBI Hub calculator URL | Application under test |
 | `HEADLESS` | `true` | Headless browser mode |
 | `PROJECTS` | `chromium,firefox,webkit` (local default) | Browser projects to run; **CI sets `chromium` only** |
-| `WORKERS` | Playwright default | Parallel worker count |
+| `WORKERS` | Playwright default (CI: `2`) | Parallel worker count |
 | `TIMEOUT` | `30000` | Test timeout (ms) |
 
 ---

@@ -5,7 +5,7 @@
 | **Application** | [RBI Hub Scientific Calculator](https://rbihubcodechallenge.github.io/calculator/index.html) |
 | **Related docs** | [README](../README.md) · [TEST_PLAN](TEST_PLAN.md) |
 | **Automation** | [`../src/tests/calculator.spec.ts`](../src/tests/calculator.spec.ts) |
-| **Governance registry** | [`../src/tests/known-defects.ts`](../src/tests/known-defects.ts) |
+| **Governance registry** | [`../src/config/known-defects.ts`](../src/config/known-defects.ts) |
 
 **Severity:** Critical = broken core math/UI · Major = wrong results or blocked flows · Minor = UX/consistency
 
@@ -19,7 +19,7 @@ Tests assert **correct** behavior; failures document these defects until the app
 
 ## Jira ticket mapping (governed defects)
 
-Source of truth: [`known-defects.ts`](../src/tests/known-defects.ts)
+Source of truth: [`known-defects.ts`](../src/config/known-defects.ts)
 
 | DEF ID | Jira ticket | Summary |
 |--------|-------------|---------|
@@ -336,4 +336,4 @@ Defects **not** in `known-defects.ts` (DEF-07, DEF-11, DEF-16 – DEF-22) are do
 | DEF-21 | — | Minor | — | Display disabled |
 | DEF-22 | — | Minor | — | No test IDs in DOM |
 
-**Governed total:** 14 defects in [`known-defects.ts`](../src/tests/known-defects.ts) · **55 automated tests** use `test.fail()` (17 explicit specs + 38 PEMDAS cases with `defects[]`).
+**Governed total:** 14 defects in [`known-defects.ts`](../src/config/known-defects.ts) · **55 automated tests** use `test.fail()` (17 explicit specs + 38 PEMDAS cases with `defects[]`).

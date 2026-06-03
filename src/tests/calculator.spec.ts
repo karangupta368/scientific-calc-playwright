@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures/calculator.fixture';
-import { markExpectedApplicationDefect } from './known-defects';
+import { markExpectedApplicationDefect } from '../config/known-defects';
 import {
   PEMDAS_CASES,
   PEMDAS_CATEGORY_LABELS,
@@ -8,7 +8,7 @@ import {
 import {
   REGRESSION_ONLY,
   SANITY_AND_REGRESSION,
-} from './tags';
+} from '../config/tags';
 import {
   expectDisplayNotText,
   expectDisplayNumeric,
