@@ -10,6 +10,8 @@
 
 Tests assert **correct** behavior; failures document these defects until the application is fixed.
 
+**Automation tags:** Tests that document defects (DEF-XX) are tagged **`@regression`**. **Critical** defects (DEF-01, DEF-02, DEF-04, DEF-05, DEF-06) are also in the **`@sanity`** subset as defect monitors — expected to fail until fixed. See [TEST_PLAN.md — Test tags](TEST_PLAN.md#5-test-tags-sanity--regression).
+
 ---
 
 ## UI / button wiring

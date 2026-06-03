@@ -73,6 +73,9 @@ Environment variables (see [.env.example](.env.example)):
 | `npm run test:ui` | Playwright UI mode |
 | `npm run test:debug` | Debug mode |
 | `npm run test:chromium` | Chromium only |
+| `npm run test:sanity` | Sanity suite (20 tests, `@sanity`) |
+| `npm run test:sanity:chromium` | Sanity on Chromium only |
+| `npm run test:regression` | Full regression suite (77 tests, `@regression`) |
 | `npm run report` | Open HTML report |
 
 Reports are written to `reports/html`. Failure artifacts (screenshots, videos) go to `test-results/`.
@@ -88,6 +91,7 @@ src/
   pages/CalculatorPage.ts
   tests/calculator.spec.ts
   tests/pemdas.cases.ts
+  tests/tags.ts
   utils/assertions.ts
 playwright.config.ts
 ```
@@ -102,3 +106,10 @@ playwright.config.ts
 ## Test strategy
 
 Tests assert **correct** calculator behavior and serve as living defect reports against known application bugs. Failures are expected until the [application under test](https://rbihubcodechallenge.github.io/calculator/index.html) is fixed. See [docs/DEFECTS.md](docs/DEFECTS.md) for the full defect register.
+
+| Tag | Tests | Notes |
+|-----|------:|-------|
+| `@sanity` | 20 | 14 smoke (pass today) + 6 **critical defect monitors** (DEF-01, 02, 04, 05, 06 — fail today) |
+| `@regression` | 77 | Full suite |
+
+Details: [docs/TEST_PLAN.md — Test tags](docs/TEST_PLAN.md#5-test-tags-sanity--regression).
